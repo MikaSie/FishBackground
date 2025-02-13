@@ -60,7 +60,7 @@ Once the server is running, open your browser and navigate to http://localhost:8
 
 
 ## Project Structure
-
+```
 FishBackground/
 ├── app/                   
 │   ├── __init__.py       
@@ -86,7 +86,7 @@ FishBackground/
 ├── requirements.txt      # Python dependencies
 ├── .env.example          # Example environment configuration
 └── README.md             # Project documentation
-
+```
 
 ## Contributing
 
