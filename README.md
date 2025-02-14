@@ -1,8 +1,11 @@
 # FishBackground
 
+Work in progress! Project has just started!
+
 Test project to recreate backgrounds of fishermen. This way they can safely share a picture without fear of revealing where the fish was caught. The model will create a new background based on the one provided.
 
 Happy fishing!
+
 
 ---
 
