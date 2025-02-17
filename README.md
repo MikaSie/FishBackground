@@ -71,16 +71,17 @@ FishBackground/
 │   ├── __init__.py       
 │   ├── segmentation.py   # Functions for background segmentation
 │   └── background.py     # Logic for background generation/replacement
-│
+|
+|── tests/                 
+│   ├── __init__.py       
+│   ├── test_api.py       # Tests for API endpoints
+│   └── test_models.py    # Tests for ML models and functions
+|
 ├── utils/                 
 │   ├── __init__.py       
 │   ├── image_processing.py  # Image pre/post-processing functions
 │   └── config.py            # Configuration and environment management
 │
-├── tests/                 
-│   ├── __init__.py       
-│   ├── test_api.py       # Tests for API endpoints
-│   └── test_models.py    # Tests for ML models and functions
 │
 ├── Dockerfile            # For containerizing the app
 ├── requirements.txt      # Python dependencies
