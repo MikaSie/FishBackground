@@ -41,6 +41,7 @@ if __name__ == '__main__':
     segmenter = Segmenter()
     test_path = 'tests/mika.jpeg'
     segmenter.segment(test_path)
+    
     plt.imshow(Image.open('tests/output.png'))
     plt.axis('off')
     plt.show()
