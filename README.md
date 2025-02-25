@@ -70,10 +70,10 @@ FishBackground/
 │   ├── main.py           # FastAPI app entry point
 │   └── api.py            # API endpoints for image processing
 │
-├── models/                
-│   ├── __init__.py       
-│   ├── segmentation.py   # Functions for background segmentation
-│   └── background.py     # Logic for background generation/replacement
+├── data/                
+│   ├── examples          # Examples for GitHub    
+│   ├── output            # Placeholder folder for all outputs
+│   └── stock_backgrounds # All stock backgrounds for copy+paste segmentations
 |
 ├── models/                
 │   ├── __init__.py       

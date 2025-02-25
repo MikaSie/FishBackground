@@ -123,4 +123,9 @@ Thumbs.db
 !data/stock_backgrounds/*.tiff
 
 # Also ignore any images in the output folder (assuming it's located at data/output)
-data/output/
+data/output/*.jpg
+data/output/*.jpeg
+data/output/*.png
+data/output/*.gif
+data/output/*.bmp
+data/output/*.tiff
