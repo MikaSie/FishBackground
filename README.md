@@ -32,7 +32,7 @@ FishBackground is designed to help fishermen share images safely. By using machi
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/your-username/FishBackground.git
+   git clone https://github.com/MikaSie/FishBackground.git
    cd FishBackground
    ```
 
@@ -75,6 +75,11 @@ FishBackground/
 │   ├── segmentation.py   # Functions for background segmentation
 │   └── background.py     # Logic for background generation/replacement
 |
+├── models/                
+│   ├── __init__.py       
+│   ├── segmentation.py   # Functions for background segmentation
+│   └── background.py     # Logic for background generation/replacement
+|
 |── tests/                 
 │   ├── __init__.py       
 │   ├── test_api.py       # Tests for API endpoints
@@ -87,8 +92,8 @@ FishBackground/
 │
 │
 ├── Dockerfile            # For containerizing the app
+├── LICENSE               # MIT License
 ├── requirements.txt      # Python dependencies
-├── .env.example          # Example environment configuration
 └── README.md             # Project documentation
 ```
 
