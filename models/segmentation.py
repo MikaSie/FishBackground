@@ -10,6 +10,7 @@ from PIL import Image
 
 
 class Segmenter:
+    
     def __init__(self, model_name: str = 'u2net_human_seg'):
         self.model = self._load_model(model_name)
 
@@ -17,6 +18,7 @@ class Segmenter:
     def _load_model(self, model_name: str):
         print(f'Loading model {model_name}')
         session = rembg.new_session(model_name = model_name)
+        print(f'Model {model_name} loaded')
         return session
 
 
@@ -51,6 +53,7 @@ class Segmenter:
         
         return output_file
     
+    
     def create_background(self, background_path:str, foreground_path: str = 'tests/output.png', random_background: bool = False):
         """
         Creates a background for the given image using the model and saves the output.
@@ -72,7 +75,7 @@ class Segmenter:
         if random_background:
             random_choice = random.choice(os.listdir(os.path.join('data', 'stock_backgrounds')))
             background_path = os.path.join(os.path.join('data', 'stock_backgrounds', random_choice))
-            print(f'Using random background {random_choice}')
+            print(f'Using random background {random_choice}, out of choices of {os.listdir(os.path.join("data", "stock_backgrounds"))}')
 
         background = Image.open(background_path)
         background.paste(foreground, center_background(background, foreground), foreground)
@@ -85,13 +88,15 @@ if __name__ == '__main__':
     # Test the Segmenter class
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default= 'u2net_human_seg')
-    parser.add_argument('--image', type=str, default= os.path.join('data', 'examples', 'before.jpeg')) 
-    parser.add_argument('--background', type=str, default= os.path.join('data', 'stock_backgrounds', 'blue_morning.jpeg'))
+    parser.add_argument('--image', type=str, default= 'before.jpeg') 
+    parser.add_argument('--background', type=str, default= 'blue_morning.jpeg')
     parser.add_argument('--random_background', action= "store_true", default= False)
 
     args = parser.parse_args()
-    
-    segmenter = Segmenter()
+    args.image = os.path.join('data', 'examples', args.image)
+    args.background = os.path.join('data', 'stock_backgrounds', args.background)
+
+    segmenter = Segmenter(model_name= args.model)
     segmenter.segment(args.image)
 
     segmenter.create_background(background_path= args.background, 
