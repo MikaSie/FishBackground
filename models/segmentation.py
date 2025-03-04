@@ -77,10 +77,14 @@ class Segmenter:
 if __name__ == '__main__':
     # Parse command-line arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', type=str, default='u2net_human_seg')
-    parser.add_argument('--image', type=str, default='before.jpeg')
-    parser.add_argument('--background', type=str, default='blue_morning.jpeg')
-    parser.add_argument('--random_background', action="store_true", default=False)
+    parser.add_argument('-m', '--model', type=str, default='u2net_human_seg',
+                        help='The segmentation model to use.')
+    parser.add_argument('-i', '--image', type=str, default='before.jpeg',
+                        help='The image to segment.')
+    parser.add_argument('-b', '--background', type=str, default='blue_morning.jpeg',
+                        help='The background image to use.')
+    parser.add_argument('-rb', '--random_background', action="store_true", default=False,
+                        help='Use a random background from the stock backgrounds.')
     
     args = parser.parse_args()
     
@@ -102,7 +106,7 @@ if __name__ == '__main__':
         foreground_image=segmented_foreground, 
         random_background=args.random_background
     )
-    
+
     print('Combined image saved to data/output/complete_image.png')
     
     # Display the final image
