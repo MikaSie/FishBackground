@@ -4,6 +4,7 @@ import argparse
 import os
 import random
 import io
+from typing import Union
 from utils.image_processing import center_background
 from PIL import Image
 
@@ -23,36 +24,40 @@ class Segmenter:
         return session
 
 
-    def segment(self, image_path: str) -> Image.Image:
-        """
-        Segments the given image using the model and returns the segmented image as a PIL Image.
-        
-        Args:
-            image_path (str): The path to the image file to be segmented.
-        
-        Returns:
-            Image.Image: The segmented image with transparency.
-        """
-        print(f'Segmenting image {image_path}')
-        with open(image_path, 'rb') as img_file:
-            input_bytes = img_file.read()
-            output_bytes = rembg.remove(input_bytes, session=self.model, alpha_matting=True)
-        
-        # Convert the output bytes to a PIL Image using an in-memory buffer
-        segmented_image = Image.open(io.BytesIO(output_bytes)).convert("RGBA")
 
+    def segment(self, image_input: Union[str, Image.Image]) -> Image.Image:
+        # If image_input is a string, open the file.
+        if isinstance(image_input, str):
+            with open(image_input, 'rb') as img_file:
+                input_bytes = img_file.read()
+        # Otherwise, assume it's a PIL Image.
+        elif isinstance(image_input, Image.Image):
+            # Save the image to an in-memory buffer.
+            buf = io.BytesIO()
+            image_input.save(buf, format="PNG")
+            buf.seek(0)
+            input_bytes = buf.getvalue()
+        else:
+            raise TypeError("Expected a file path (str) or a PIL Image")
+
+        # Process the image bytes.
+        output_bytes = rembg.remove(input_bytes, session=self.model, alpha_matting=True)
+        
+        # Convert the output bytes back to a PIL Image.
+        segmented_image = Image.open(io.BytesIO(output_bytes)).convert("RGBA")
         return segmented_image
     
     
-    def combine_foreground_and_background(self, background_image: Image.Image, foreground_image: Image.Image, random_background: bool = False) -> Image.Image:
+    def combine_foreground_and_background(self, background_image: Image.Image, foreground_image: Image.Image, 
+                                          random_background: bool = False, save_image: bool = False) -> Image.Image:
         """
         Pastes the segmented foreground image onto the background image and returns the combined image.
-        The final image is saved in the data/output folder.
         
         Args:
             background_image (Image.Image): The background image as a PIL Image.
             foreground_image (Image.Image): The segmented foreground image as a PIL Image.
             random_background (bool): If True, a random background from the stock backgrounds is used.
+            save_image (bool): If True, the final image is saved to the data/output folder.
         
         Returns:
             Image.Image: The final combined image.
@@ -69,7 +74,9 @@ class Segmenter:
         background_image.paste(foreground_image, position, foreground_image)
         
         output_path = os.path.join('data', 'output', 'complete_image.png')
-        background_image.save(output_path)
+        
+        if save_image:
+            background_image.save(output_path)
 
         return background_image
 
@@ -95,7 +102,6 @@ if __name__ == '__main__':
     
     # Get the segmented foreground as a PIL image in memory
     segmented_foreground = segmenter.segment(image_path)
-    print(f"Segmented foreground type: {type(segmented_foreground)}")
     
     # Load the background image as a PIL image
     background_image = Image.open(background_path)
@@ -106,8 +112,6 @@ if __name__ == '__main__':
         foreground_image=segmented_foreground, 
         random_background=args.random_background
     )
-
-    print('Combined image saved to data/output/complete_image.png')
     
     # Display the final image
     plt.imshow(combined_image)
