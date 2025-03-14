@@ -68,9 +68,6 @@ Once the server is running, open your browser and navigate to <http://localhost:
 
 ```text
 FishBackground/
-├── app/                   
-│   ├── __init__.py       
-│   └── main.py            # API endpoints for image processing
 │
 ├── data/                
 │   ├── examples          # Examples for GitHub    
@@ -94,6 +91,7 @@ FishBackground/
 │
 ├── Dockerfile            # For containerizing the app
 ├── LICENSE               # MIT License
+├── main.py               # Main file for API access
 ├── requirements.txt      # Python dependencies
 └── README.md             # Project documentation
 ```

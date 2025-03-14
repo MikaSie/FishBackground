@@ -8,8 +8,6 @@ from typing import Union
 from utils.image_processing import center_background
 from PIL import Image
 
-#TODO: Add relative paths
-
 
 class Segmenter:
     
