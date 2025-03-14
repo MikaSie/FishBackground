@@ -6,7 +6,6 @@ Test project to recreate backgrounds of fishermen. This way they can safely shar
 
 Happy fishing!
 
-
 ---
 
 ## Table of Contents
@@ -37,12 +36,14 @@ FishBackground is designed to help fishermen share images safely. By using machi
    ```
 
 2. **Create a virtual environment:**
+
     ```bash
     python3 -m venv env 
     source env/bin/activate
     ```
 
 3. **Install dependencies:**
+
     ```bash
     pip install -r requirements.txt
     ```
@@ -50,25 +51,26 @@ FishBackground is designed to help fishermen share images safely. By using machi
 ## Usage
 
 1. **Run the FastAPI application:**
+
     ```bash
     uvicorn app.main:app --reload
     ```
 
 2. **Access the API:**
-Once the server is running, open your browser and navigate to http://localhost:8000/docs to see the interactive API documentation and test endpoints.
+Once the server is running, open your browser and navigate to <http://localhost:8000/docs> to see the interactive API documentation and test endpoints.
 
 3. **Uploading and processing images:**
+
 - Use the /upload endpoint to submit your image
 - The backend will process the image, remove the original background, and return the modified image with a generated background.
 
-
 ## Project Structure
-```
+
+```text
 FishBackground/
 ├── app/                   
 │   ├── __init__.py       
-│   ├── main.py           # FastAPI app entry point
-│   └── api.py            # API endpoints for image processing
+│   └── main.py            # API endpoints for image processing
 │
 ├── data/                
 │   ├── examples          # Examples for GitHub    
@@ -77,8 +79,7 @@ FishBackground/
 |
 ├── models/                
 │   ├── __init__.py       
-│   ├── segmentation.py   # Functions for background segmentation
-│   └── background.py     # Logic for background generation/replacement
+│   └── background.py     # Logic for background segmentation
 |
 |── tests/                 
 │   ├── __init__.py       
@@ -100,18 +101,19 @@ FishBackground/
 ## Contributing
 
 Contributions are welcome! If you’d like to contribute:
-1.	Fork the repository.
-2.	Create a new branch (git checkout -b feature/your-feature).
-3.	Make your changes and commit them (git commit -am 'Add new feature').
-4.	Push to the branch (git push origin feature/your-feature).
-5.	Open a Pull Request.
+
+1. Fork the repository.
+2. Create a new branch (git checkout -b feature/your-feature).
+3. Make your changes and commit them (git commit -am 'Add new feature').
+4. Push to the branch (git push origin feature/your-feature).
+5. Open a Pull Request.
 
 Please ensure your code adheres to the project’s coding standards and includes tests when appropriate.
-
 
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
 
 ## Contact
+
 If you have any questions or suggestions, please open an issue or contact the maintainer at my GitHub!
