@@ -1,4 +1,4 @@
-# FishBackground
+<img width="1510" alt="Scherm­afbeelding 2025-03-19 om 15 37 16" src="https://github.com/user-attachments/assets/052b2c4c-d6da-4678-8518-55f1e2c44a71" /># FishBackground
 
 Work in progress! Project has just started!
 
@@ -61,7 +61,10 @@ FishBackground is designed to help fishermen share images safely. By using machi
 - API Docs: <http://127.0.0.1:8000/docs>
 - Browse the interactive docs to test endpoints like /process_image.
 - Simple Front-End: <http://127.0.0.1:8000/>
-- A webpage (served by FastAPI) allows you to upload a foreground image, choose or upload a background, and see the processed image.
+- A webpage (served by FastAPI) allows you to upload a foreground image, choose or upload a background, and see the processed image. See example:
+
+<img width="1511" alt="Scherm­afbeelding 2025-03-19 om 15 37 58" src="https://github.com/user-attachments/assets/f45152a3-502e-4fbf-a1f4-8ceaca051aca" />
+
 
 3. **Processing images:**
 
