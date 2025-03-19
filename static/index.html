@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fishing Background Remover</title>
+  <style>
+    /* Reset & Basic Styling */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      /* Subtle fishing/ocean-inspired gradient background */
+      background: linear-gradient(135deg, #cceeff 0%, #88bbff 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #004e75; /* Slightly darker blue for contrast */
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 600px;
+      width: 90%;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      position: relative;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #006699;
+    }
+
+    input[type="file"] {
+      margin-bottom: 1.5rem;
+      display: block;
+      width: 100%;
+      border: 1px solid #ccc;
+      padding: 0.4rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button {
+      background: #0088cc;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 0.7rem 1.2rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-top: 1rem;
+    }
+    button:hover {
+      background: #0077b3;
+    }
+
+    /* Loading Spinner */
+    .spinner {
+      margin: 1.5rem auto;
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #0088cc;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      display: none; /* Hidden by default; shown during processing */
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Result Section */
+    #resultContainer {
+      margin-top: 1.5rem;
+    }
+    #resultImg {
+      max-width: 100%;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+    }
+
+    /* A small fishing-themed decorative icon (inline SVG) */
+    .fish-icon {
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .footer {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #004e75;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>
+      <!-- A minimal inline SVG fish icon -->
+      <svg class="fish-icon" viewBox="0 0 64 64" fill="#0088cc">
+        <path d="M29 6c-9 0-18 4-24 11 6 7 15 11 24 11 3 0 7-.4 10-1.3 0 0 .5 3.3.5 5.3 0 2-.5 5.3-.5 5.3-3-1-7-1.3-10-1.3-9 0-18 4-24 11 6 7 15 11 24 11 19 0 35-10.7 35-25S48 6 29 6z"/>
+      </svg>
+      Fishing Background Remover
+    </h1>
+
+    <!-- Foreground file input -->
+    <div>
+      <label for="foreground">Foreground Image:</label>
+      <input type="file" id="foreground" accept="image/*" />
+    </div>
+
+    <!-- Background file input -->
+    <div>
+      <label for="background">Background Image:</label>
+      <input type="file" id="background" accept="image/*" />
+    </div>
+
+    <button onclick="processImages()">Process Image</button>
+
+    <!-- Loading Spinner -->
+    <div id="spinner" class="spinner"></div>
+
+    <!-- Result -->
+    <div id="resultContainer">
+      <h2>Result:</h2>
+      <img id="resultImg" src="" alt="The processed image will appear here." />
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Happy Fishing!</p>
+  </div>
+
+  <script>
+    async function processImages() {
+      const fgInput = document.getElementById("foreground");
+      const bgInput = document.getElementById("background");
+      const spinner = document.getElementById("spinner");
+      const resultImg = document.getElementById("resultImg");
+
+      // Reset any previous image
+      resultImg.src = "";
+
+      if (!fgInput.files.length || !bgInput.files.length) {
+        alert("Please select BOTH foreground and background images before processing.");
+        return;
+      }
+
+      // Show spinner
+      spinner.style.display = "block";
+
+      // Build form data
+      const formData = new FormData();
+      formData.append("foreground", fgInput.files[0]);
+      formData.append("background", bgInput.files[0]);
+
+      try {
+        const response = await fetch("/process_image", {
+          method: "POST",
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.status}`);
+        }
+
+        // Convert response to a blob (image data)
+        const blob = await response.blob();
+
+        // Create a local URL for this blob and display it
+        const imageURL = URL.createObjectURL(blob);
+        resultImg.src = imageURL;
+      } catch (error) {
+        alert("Error processing images: " + error.message);
+        console.error(error);
+      } finally {
+        // Hide spinner
+        spinner.style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>

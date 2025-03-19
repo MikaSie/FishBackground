@@ -1,20 +1,20 @@
 import os
 import io
 from fastapi import FastAPI, File, UploadFile
-from fastapi.responses import FileResponse, StreamingResponse, JSONResponse
+from fastapi.responses import FileResponse, StreamingResponse, JSONResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from PIL import Image
 from models.segmentation import Segmenter 
 
 app = FastAPI(title= "Background Remover API", description="API to remove background from images")
-
-app.mount("/stock_backgrounds", StaticFiles(directory= os.path.join('data', 'stock_backgrounds')), name= "stock_backgrounds")
+#app.mount("/", StaticFiles(directory= "static", html= True), name = "static")
 
 segmenter = Segmenter(model_name='u2net_human_seg')
 
 @app.get("/")
-async def root():
-    return {"message": "Welcome to Background Remover API"}
+def serve_index():
+    with open("static/index.html") as f:
+        return HTMLResponse(f.read())
 
 @app.post("/process_image")
 async def process_image(background: UploadFile = File(...), foreground: UploadFile = File(...)):
@@ -38,3 +38,6 @@ async def available_stock_backgrounds():
     # Construct URLs for each background image
     urls = [f"/stock_backgrounds/{filename}" for filename in filenames]
     return JSONResponse({"stock_backgrounds": urls})
+
+
+app.mount("/stock_backgrounds", StaticFiles(directory= os.path.join('data', 'stock_backgrounds')), name= "stock_backgrounds")
