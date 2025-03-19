@@ -57,12 +57,17 @@ FishBackground is designed to help fishermen share images safely. By using machi
     ```
 
 2. **Access the API:**
-Once the server is running, open your browser and navigate to <http://localhost:8000/docs> to see the interactive API documentation and test endpoints.
 
-3. **Uploading and processing images:**
+- API Docs: <http://127.0.0.1:8000/docs>
+- Browse the interactive docs to test endpoints like /process_image.
+- Simple Front-End: <http://127.0.0.1:8000/>
+- A webpage (served by FastAPI) allows you to upload a foreground image, choose or upload a background, and see the processed image.
 
-- Use the /upload endpoint to submit your image
-- The backend will process the image, remove the original background, and return the modified image with a generated background.
+3. **Processing images:**
+
+- The API returns the processed image as a PNG.
+- You can also download the final result from the webpage.
+
 
 ## Project Structure
 
@@ -78,6 +83,10 @@ FishBackground/
 │   ├── __init__.py       
 │   └── background.py     # Logic for background segmentation
 |
+|── static/                 
+│   ├── index.html        # HTML for webpage
+│   └── styles.css        # CSS style sheet
+|
 |── tests/                 
 │   ├── __init__.py       
 │   ├── test_api.py       # Tests for API endpoints
@@ -88,11 +97,12 @@ FishBackground/
 │   ├── image_processing.py  # Image pre/post-processing functions
 │   └── config.py            # Configuration and environment management
 │
-│
 ├── Dockerfile            # For containerizing the app
+├── compose.yaml          # File for setup of Docker
 ├── LICENSE               # MIT License
 ├── main.py               # Main file for API access
 ├── requirements.txt      # Python dependencies
+├── README.Docker.MD      # Docker documentation
 └── README.md             # Project documentation
 ```
 

@@ -3,146 +3,50 @@
 <head>
   <meta charset="UTF-8" />
   <title>Fishing Background Remover</title>
-  <style>
-    /* Reset & Basic Styling */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: "Helvetica Neue", Arial, sans-serif;
-      /* Subtle fishing/ocean-inspired gradient background */
-      background: linear-gradient(135deg, #cceeff 0%, #88bbff 100%);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      color: #004e75; /* Slightly darker blue for contrast */
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-    }
-
-    .container {
-      background: white;
-      padding: 2rem;
-      border-radius: 10px;
-      max-width: 600px;
-      width: 90%;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      position: relative;
-    }
-
-    label {
-      display: block;
-      text-align: left;
-      margin-bottom: 0.5rem;
-      font-weight: bold;
-      color: #006699;
-    }
-
-    input[type="file"] {
-      margin-bottom: 1.5rem;
-      display: block;
-      width: 100%;
-      border: 1px solid #ccc;
-      padding: 0.4rem;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    button {
-      background: #0088cc;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      padding: 0.7rem 1.2rem;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background 0.3s ease;
-      margin-top: 1rem;
-    }
-    button:hover {
-      background: #0077b3;
-    }
-
-    /* Loading Spinner */
-    .spinner {
-      margin: 1.5rem auto;
-      border: 6px solid #f3f3f3;
-      border-top: 6px solid #0088cc;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
-      display: none; /* Hidden by default; shown during processing */
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* Result Section */
-    #resultContainer {
-      margin-top: 1.5rem;
-    }
-    #resultImg {
-      max-width: 100%;
-      border: 2px solid #ccc;
-      border-radius: 5px;
-    }
-
-    /* A small fishing-themed decorative icon (inline SVG) */
-    .fish-icon {
-      width: 40px;
-      height: 40px;
-      margin-right: 10px;
-    }
-
-    .footer {
-      margin-top: 2rem;
-      font-size: 0.9rem;
-      color: #004e75;
-    }
-  </style>
+  <!-- Link to your CSS file -->
+  <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
   <div class="container">
     <h1>
-      <!-- A minimal inline SVG fish icon -->
       <svg class="fish-icon" viewBox="0 0 64 64" fill="#0088cc">
         <path d="M29 6c-9 0-18 4-24 11 6 7 15 11 24 11 3 0 7-.4 10-1.3 0 0 .5 3.3.5 5.3 0 2-.5 5.3-.5 5.3-3-1-7-1.3-10-1.3-9 0-18 4-24 11 6 7 15 11 24 11 19 0 35-10.7 35-25S48 6 29 6z"/>
       </svg>
       Fishing Background Remover
     </h1>
 
-    <!-- Foreground file input -->
-    <div>
+    <!-- Foreground + optional user background -->
+    <div style="text-align: left;">
       <label for="foreground">Foreground Image:</label>
       <input type="file" id="foreground" accept="image/*" />
+
+      <label for="userBackground">Background Image (Optional, if not using a stock background):</label>
+      <input type="file" id="userBackground" accept="image/*" />
     </div>
 
-    <!-- Background file input -->
-    <div>
-      <label for="background">Background Image:</label>
-      <input type="file" id="background" accept="image/*" />
-    </div>
+    <!-- Label to show which stock background is selected -->
+    <div id="stockChoice">Currently no stock background selected.</div>
 
+    <!-- Buttons -->
+    <button onclick="showStockBackgrounds()">Show Stock Backgrounds</button>
     <button onclick="processImages()">Process Image</button>
 
     <!-- Loading Spinner -->
     <div id="spinner" class="spinner"></div>
 
-    <!-- Result -->
+    <!-- Stock Backgrounds Grid -->
+    <div id="stockContainer" style="display: none; margin-top: 1rem;">
+      <h3>Select a Stock Background (click again to unselect):</h3>
+      <div id="grid" class="grid"></div>
+    </div>
+
+    <!-- Result Container -->
     <div id="resultContainer">
-      <h2>Result:</h2>
-      <img id="resultImg" src="" alt="The processed image will appear here." />
+      <h2>Result</h2>
+      <p id="placeholder">No image processed yet. Please select your images and click "Process Image".</p>
+      <img id="resultImg" src="" alt="Processed result here." />
+      <!-- Download Button -->
+      <a id="downloadBtn" download="processed_image.png">Download Processed Image</a>
     </div>
   </div>
 
@@ -151,17 +55,125 @@
   </div>
 
   <script>
+    let selectedStockFilename = null; // The user-chosen stock background filename
+    let selectedStockBlob = null;     // The actual Blob for the chosen stock background
+    let resultBlobURL = null;         // To store final processed image as a blob URL (for downloading)
+
+    /**
+     * Toggles the stock backgrounds panel.
+     * Fetches the list of stock backgrounds from the server and displays them.
+     */
+    async function showStockBackgrounds() {
+      const stockContainer = document.getElementById("stockContainer");
+      const grid = document.getElementById("grid");
+
+      // Toggle visibility
+      if (stockContainer.style.display === "none") {
+        stockContainer.style.display = "block";
+      } else {
+        stockContainer.style.display = "none";
+        return;
+      }
+
+      // Fetch available backgrounds
+      try {
+        const response = await fetch("/available_stock_backgrounds");
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.status}`);
+        }
+        const data = await response.json();
+        const bgList = data.stock_backgrounds || [];
+        
+        // Clear existing thumbnails
+        grid.innerHTML = "";
+
+        // Create a thumbnail for each background
+        bgList.forEach(filename => {
+          const img = document.createElement("img");
+          img.src = "/stock_backgrounds/" + filename;
+          img.className = "thumbnail";
+          img.title = filename;
+          img.onclick = () => selectStockBackground(filename, img);
+
+          // If it's currently selected, highlight it
+          if (filename === selectedStockFilename) {
+            img.classList.add("selected");
+          }
+
+          grid.appendChild(img);
+        });
+      } catch (error) {
+        alert("Error loading stock backgrounds: " + error.message);
+      }
+    }
+
+    /**
+     * Toggles selection of a stock background thumbnail.
+     * If we click the already-selected background, unselect it.
+     */
+    async function selectStockBackground(filename, thumbnailElement) {
+      const allThumbnails = document.querySelectorAll(".thumbnail");
+      const stockChoiceLabel = document.getElementById("stockChoice");
+
+      // Case 1: If we clicked the already-selected background, unselect it
+      if (filename === selectedStockFilename) {
+        // Unselect
+        selectedStockFilename = null;
+        selectedStockBlob = null;
+        thumbnailElement.classList.remove("selected");
+        stockChoiceLabel.textContent = "Currently no stock background selected.";
+        return;
+      }
+
+      // Case 2: We're selecting a new background. Unselect any old one
+      allThumbnails.forEach(el => el.classList.remove("selected"));
+      thumbnailElement.classList.add("selected");
+      selectedStockFilename = filename;
+
+      // Indicate on the label
+      stockChoiceLabel.textContent = `Currently selected stock background: ${filename}`;
+
+      // Fetch this background as a blob
+      try {
+        const response = await fetch("/stock_backgrounds/" + filename);
+        if (!response.ok) {
+          throw new Error(`Error fetching stock background: ${response.status}`);
+        }
+        selectedStockBlob = await response.blob();
+      } catch (error) {
+        alert("Error fetching background image: " + error.message);
+        selectedStockBlob = null;
+        selectedStockFilename = null;
+        thumbnailElement.classList.remove("selected");
+        stockChoiceLabel.textContent = "Currently no stock background selected.";
+      }
+    }
+
+    /**
+     * Uploads the chosen foreground and background (stock or user-uploaded) to /process_image
+     * Then displays and allows downloading of the processed result.
+     */
     async function processImages() {
       const fgInput = document.getElementById("foreground");
-      const bgInput = document.getElementById("background");
+      const userBgInput = document.getElementById("userBackground");
       const spinner = document.getElementById("spinner");
       const resultImg = document.getElementById("resultImg");
+      const placeholder = document.getElementById("placeholder");
+      const downloadBtn = document.getElementById("downloadBtn");
 
-      // Reset any previous image
+      // Reset UI
       resultImg.src = "";
+      resultImg.style.display = "none";
+      placeholder.textContent = "No image processed yet. Please select your images and click \"Process Image\".";
+      downloadBtn.style.display = "none";
+      if (resultBlobURL) {
+        URL.revokeObjectURL(resultBlobURL);
+        resultBlobURL = null;
+      }
 
-      if (!fgInput.files.length || !bgInput.files.length) {
-        alert("Please select BOTH foreground and background images before processing.");
+      // Make sure we have at least a foreground
+      if (!fgInput.files.length) {
+        alert("Please select a foreground image before processing.");
         return;
       }
 
@@ -170,8 +182,23 @@
 
       // Build form data
       const formData = new FormData();
+      // Attach foreground
       formData.append("foreground", fgInput.files[0]);
-      formData.append("background", bgInput.files[0]);
+
+      // Decide how to attach the background
+      if (selectedStockBlob) {
+        // If the user selected a stock background, use that
+        const fileName = selectedStockFilename || "stock.png";
+        const bgFile = new File([selectedStockBlob], fileName, { type: selectedStockBlob.type });
+        formData.append("background", bgFile);
+      } else if (userBgInput.files.length) {
+        // If userBgInput is present, use the user's uploaded background
+        formData.append("background", userBgInput.files[0]);
+      } else {
+        alert("No background selected. Please either pick a stock background or upload one.");
+        spinner.style.display = "none";
+        return;
+      }
 
       try {
         const response = await fetch("/process_image", {
@@ -183,17 +210,20 @@
           throw new Error(`Server error: ${response.status}`);
         }
 
-        // Convert response to a blob (image data)
         const blob = await response.blob();
-
-        // Create a local URL for this blob and display it
         const imageURL = URL.createObjectURL(blob);
         resultImg.src = imageURL;
+        resultImg.style.display = "block";
+        placeholder.textContent = "";
+
+        // Prepare the download button
+        downloadBtn.href = imageURL;
+        downloadBtn.style.display = "inline-block";
+        resultBlobURL = imageURL;
       } catch (error) {
         alert("Error processing images: " + error.message);
         console.error(error);
       } finally {
-        // Hide spinner
         spinner.style.display = "none";
       }
     }

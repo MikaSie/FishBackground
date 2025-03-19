@@ -7,7 +7,7 @@ from PIL import Image
 from models.segmentation import Segmenter 
 
 app = FastAPI(title= "Background Remover API", description="API to remove background from images")
-#app.mount("/", StaticFiles(directory= "static", html= True), name = "static")
+app.mount("/static", StaticFiles(directory= "static", html= True), name = "static")
 
 segmenter = Segmenter(model_name='u2net_human_seg')
 
@@ -35,9 +35,7 @@ async def process_image(background: UploadFile = File(...), foreground: UploadFi
 async def available_stock_backgrounds():
     backgrounds_dir = os.path.join('data', 'stock_backgrounds')
     filenames = os.listdir(backgrounds_dir)
-    # Construct URLs for each background image
-    urls = [f"/stock_backgrounds/{filename}" for filename in filenames]
-    return JSONResponse({"stock_backgrounds": urls})
+    return JSONResponse({"stock_backgrounds": filenames})
 
 
 app.mount("/stock_backgrounds", StaticFiles(directory= os.path.join('data', 'stock_backgrounds')), name= "stock_backgrounds")
