@@ -1,6 +1,3 @@
-<img width="1510" alt="Scherm­afbeelding 2025-03-19 om 15 37 16" src="https://github.com/user-attachments/assets/052b2c4c-d6da-4678-8518-55f1e2c44a71" /># FishBackground
-
-Work in progress! Project has just started!
 
 Test project to recreate backgrounds of fishermen. This way they can safely share a picture without fear of revealing where the fish was caught. The model will create a new background based on the one provided.
 
