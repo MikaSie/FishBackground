@@ -1,3 +1,5 @@
+# FishBackground
+
 Test project to recreate backgrounds of fishermen. This way they can safely share a picture without fear of revealing where the fish was caught. The model will create a new background based on the one provided.
 
 Happy fishing!
@@ -61,13 +63,12 @@ FishBackground is designed to help fishermen share images safely. By using machi
 
 <img width="1511" alt="Scherm­afbeelding 2025-03-19 om 15 37 58" src="https://github.com/user-attachments/assets/f45152a3-502e-4fbf-a1f4-8ceaca051aca" />
 
-
 3. **Processing images:**
 
 - The API returns the processed image as a PNG.
 - You can also download the final result from the webpage.
 
-An example of a picture before and after processing: 
+An example of a picture before and after processing:
 
 <img src="data/examples/before.jpeg" width="400" >
 
