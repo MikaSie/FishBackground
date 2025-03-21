@@ -1,4 +1,3 @@
-![complete_image](https://github.com/user-attachments/assets/dac70c04-d40b-4cce-a1a9-807f763369dd)
 Test project to recreate backgrounds of fishermen. This way they can safely share a picture without fear of revealing where the fish was caught. The model will create a new background based on the one provided.
 
 Happy fishing!
