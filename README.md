@@ -67,13 +67,9 @@ FishBackground is designed to help fishermen share images safely. By using machi
 - The API returns the processed image as a PNG.
 - You can also download the final result from the webpage.
 
-An example of a picture before processing: 
-![before](data/examples/before.jpeg | width=100)
-
-<img src="data/examples/before.jpeg" width="100" >
-
-After processing:
-![after](https://github.com/user-attachments/assets/bda648b9-78ec-4c0f-8429-29fde86e9400 | width=100)
+An example of a picture before and after processing: 
+<img src="data/examples/before.jpeg" width="400" >
+<img src="https://github.com/user-attachments/assets/bda648b9-78ec-4c0f-8429-29fde86e9400" width="400" >
 
 ## Project Structure
 
