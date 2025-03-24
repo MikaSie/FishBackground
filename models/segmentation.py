@@ -5,7 +5,7 @@ import os
 import random
 import io
 import torch
-from diffusers import StableDiffusion3InpaintPipeline #TODO: Check later if this is the correct import, ControlNet version also possible, but also StableDiffusion3InpaintPipeline
+from diffusers import StableDiffusionInpaintPipeline #TODO: Check later if this is the correct import, ControlNet version also possible, but also StableDiffusion3InpaintPipeline
 from typing import Union
 from utils.image_processing import center_background
 from PIL import Image
@@ -45,7 +45,7 @@ class Segmenter:
         Note: Requires a CUDA-enabled GPU for best performance.
         """
         print("Loading Stable Diffusion Inpainting Pipeline...")
-        pipe = StableDiffusion3InpaintPipeline.from_pretrained(
+        pipe = StableDiffusionInpaintPipeline.from_pretrained(
             "runwayml/stable-diffusion-inpainting", 
             torch_dtype=torch.float16
         )
@@ -145,7 +145,30 @@ class Segmenter:
         # Create a base image (RGB) that uses a solid color (e.g., white) where the background is missing.
         base_image = Image.new("RGB", segmented_image.size, (255, 255, 255))
         base_image.paste(segmented_image, mask=alpha_channel)
+        base_image = Image.new("RGB", segmented_image.size, (255, 255, 255))
+        # Paste the segmented image onto the white base using its alpha channel as the mask.
+        base_image.paste(segmented_image, mask=alpha_channel)
 
+        # --- Display Images Side by Side ---
+        """fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+
+        # Original Segmented Image
+        axes[0].imshow(segmented_image)
+        axes[0].set_title("Segmented Image")
+        axes[0].axis("off")
+
+        # Mask Image
+        axes[1].imshow(mask, cmap="gray")
+        axes[1].set_title("Mask Image")
+        axes[1].axis("off")
+
+        # Base Image
+        axes[2].imshow(base_image)
+        axes[2].set_title("Base Image")
+        axes[2].axis("off")
+
+        plt.tight_layout()
+        plt.show()"""
         # Run the inpainting pipeline.
         result = self.inpaint_pipe(
             prompt=prompt,
