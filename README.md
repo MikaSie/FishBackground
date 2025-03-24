@@ -74,6 +74,9 @@ An example of a picture before and after processing:
 
 <img src="https://github.com/user-attachments/assets/bda648b9-78ec-4c0f-8429-29fde86e9400" width="400" >
 
+This is another example which leveraged StableDiffusion inpainting, it's not perfect but work is still in progress: 
+![Figure_1](https://github.com/user-attachments/assets/9d7f90fe-33ea-458d-b745-5db203990cda)
+
 ## Project Structure
 
 ```text
