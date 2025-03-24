@@ -5,7 +5,7 @@ import os
 import random
 import io
 import torch
-from diffusers import StableDiffusionInpaintPipeline #TODO: Check later if this is the correct import, ControlNet version also possible, but also StableDiffusion3InpaintPipeline
+from diffusers import StableDiffusionInpaintPipeline, StableDiffusion3InpaintPipeline, StableDiffusionControlNetInpaintPipeline, StableDiffusion3ControlNetPipeline #TODO: Check later if this is the correct import, ControlNet version also possible, but also StableDiffusion3InpaintPipeline
 from typing import Union
 from utils.image_processing import center_background
 from PIL import Image
